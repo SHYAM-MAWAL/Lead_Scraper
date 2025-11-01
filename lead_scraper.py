@@ -113,10 +113,11 @@ IMPORTANT: Return ONLY the JSON object above, nothing else. No introduction, no 
         print(f"📊 Requested leads: {num_leads}")
         print(f"📧 Email extraction: {'ENABLED ✅' if require_email else 'DISABLED'}")
         
-        # If no client available, return sample data
+        # If no client available, raise error
         if self.client is None:
-            print("⚠️  Using demo mode - returning sample data")
-            return self._get_sample_data(query, num_leads)
+            error_msg = "Browser-Use SDK not initialized. BROWSER_USE_API_KEY environment variable is missing or invalid."
+            print(f"❌ ERROR: {error_msg}")
+            raise ValueError(error_msg)
         
         try:
             print("🚀 Sending task to Browser-Use Cloud...")
@@ -194,20 +195,23 @@ IMPORTANT: Return ONLY the JSON object above, nothing else. No introduction, no 
             print(f"✅ Successfully extracted {len(cleaned_leads)} leads")
             
             if len(cleaned_leads) == 0:
-                print("⚠️  No leads extracted, returning sample data")
-                return self._get_sample_data(query, min(num_leads, 5))
+                error_msg = "No leads extracted from Google Maps. The Browser-Use task may have failed or returned empty results."
+                print(f"❌ ERROR: {error_msg}")
+                raise ValueError(error_msg)
             
             return cleaned_leads
         
+        except ValueError as ve:
+            # Re-raise ValueError (our custom errors)
+            raise ve
         except Exception as e:
             print(f"❌ Error during scraping: {str(e)}")
             print(f"❌ Error type: {type(e).__name__}")
             import traceback
             print(f"❌ Full traceback:")
             traceback.print_exc()
-            print("⚠️  Falling back to sample data")
-            # Return sample data for demonstration
-            return self._get_sample_data(query, min(num_leads, 5))
+            # Re-raise the exception instead of returning sample data
+            raise Exception(f"Browser-Use scraping failed: {str(e)}") from e
     
     def _clean_leads(self, leads: List[Dict]) -> List[Dict]:
         """Clean and validate lead data"""
@@ -270,46 +274,3 @@ IMPORTANT: Return ONLY the JSON object above, nothing else. No introduction, no 
                 return []
         except:
             return []
-    
-    def _get_sample_data(self, query: str, num_leads: int) -> List[Dict]:
-        """Generate sample data for demonstration"""
-        sample_leads = [
-            {
-                'name': 'Sample Restaurant 1',
-                'address': '123 Orchard Road, Singapore 238858',
-                'phone': '+65 6123 4567',
-                'website': 'https://sample-restaurant1.com',
-                'email': 'info@sample-restaurant1.com'
-            },
-            {
-                'name': 'Sample Restaurant 2',
-                'address': '456 Marina Bay, Singapore 018956',
-                'phone': '+65 6234 5678',
-                'website': 'https://sample-restaurant2.com',
-                'email': 'contact@sample-restaurant2.com'
-            },
-            {
-                'name': 'Sample Cafe 3',
-                'address': '789 Bugis Street, Singapore 188735',
-                'phone': '+65 6345 6789',
-                'website': 'https://sample-cafe3.com',
-                'email': ''
-            },
-            {
-                'name': 'Sample Bistro 4',
-                'address': '321 Sentosa Gateway, Singapore 098269',
-                'phone': '+65 6456 7890',
-                'website': '',
-                'email': 'hello@sample-bistro4.com'
-            },
-            {
-                'name': 'Sample Diner 5',
-                'address': '654 Changi Road, Singapore 419716',
-                'phone': '+65 6567 8901',
-                'website': 'https://sample-diner5.com',
-                'email': 'info@sample-diner5.com'
-            }
-        ]
-        
-        # Return up to num_leads
-        return sample_leads[:min(num_leads, len(sample_leads))]
