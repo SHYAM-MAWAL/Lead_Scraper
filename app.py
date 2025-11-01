@@ -5,7 +5,16 @@ import os
 import json
 from lead_scraper import LeadScraper
 
+# Load environment variables
 load_dotenv()
+
+# Debug: Print environment variable status
+api_key = os.getenv('BROWSER_USE_API_KEY')
+if api_key:
+    print(f"✅ BROWSER_USE_API_KEY loaded: {api_key[:20]}...")
+else:
+    print("❌ WARNING: BROWSER_USE_API_KEY not found in environment!")
+    print(f"Available env vars: {list(os.environ.keys())}")
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
@@ -57,7 +66,25 @@ def get_leads():
 
 @app.route('/api/status', methods=['GET'])
 def status():
-    return jsonify({'status': 'ok', 'service': 'Google Maps Lead Scraper'})
+    api_key = os.getenv('BROWSER_USE_API_KEY')
+    return jsonify({
+        'status': 'ok', 
+        'service': 'Google Maps Lead Scraper',
+        'api_key_configured': bool(api_key),
+        'api_key_preview': api_key[:20] + '...' if api_key else None
+    })
+
+@app.route('/api/debug', methods=['GET'])
+def debug():
+    """Debug endpoint to check environment variables"""
+    api_key = os.getenv('BROWSER_USE_API_KEY')
+    return jsonify({
+        'api_key_found': bool(api_key),
+        'api_key_length': len(api_key) if api_key else 0,
+        'api_key_preview': api_key[:10] + '...' if api_key else None,
+        'has_client': lead_scraper.client is not None,
+        'env_vars_count': len(os.environ)
+    })
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
