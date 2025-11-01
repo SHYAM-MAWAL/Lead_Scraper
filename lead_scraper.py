@@ -114,6 +114,7 @@ Make sure to return valid JSON. Do not include any other text or explanation.
         
         try:
             print("🚀 Sending task to Browser-Use Cloud...")
+            print(f"📝 Task description length: {len(task_description)} chars")
             
             # Create the task
             task = self.client.tasks.create_task(
@@ -128,6 +129,8 @@ Make sure to return valid JSON. Do not include any other text or explanation.
             
             print(f"✅ Task completed successfully!")
             print(f"📄 Status: {result.status}")
+            print(f"📄 Result type: {type(result)}")
+            print(f"📄 Result attributes: {dir(result)}")
             
             # Parse the output
             if hasattr(result, 'output') and result.output:
@@ -171,7 +174,9 @@ Make sure to return valid JSON. Do not include any other text or explanation.
         
         except Exception as e:
             print(f"❌ Error during scraping: {str(e)}")
+            print(f"❌ Error type: {type(e).__name__}")
             import traceback
+            print(f"❌ Full traceback:")
             traceback.print_exc()
             print("⚠️  Falling back to sample data")
             # Return sample data for demonstration
