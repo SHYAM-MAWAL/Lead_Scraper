@@ -1,0 +1,112 @@
+﻿
+     GOOGLE MAPS LEAD SCRAPER - DEPLOYMENT READY               
+
+
+ PROJECT STATUS: Ready for GitHub and Coolify Deployment
+
+ FILES CREATED FOR DEPLOYMENT:
+
+   Dockerfile              - Container configuration
+   docker-compose.yml      - Coolify deployment config  
+   .dockerignore           - Docker build exclusions
+   .gitignore              - Git exclusions (protects .env)
+   DEPLOYMENT.md           - Complete deployment guide
+   deploy_github.ps1       - Automated GitHub push script
+
+ QUICK DEPLOYMENT STEPS:
+
+
+STEP 1: Push to GitHub
+
+Run this command:
+    .\deploy_github.ps1
+
+Or manually:
+    git init
+    git add .
+    git commit -m "Initial commit"
+    git remote add origin https://github.com/SHYAM-MAWAL/Lead_Scraper.git
+    git branch -M main
+    git push -u origin main
+
+STEP 2: Deploy to Coolify
+
+1. Login to your Coolify dashboard
+2. Click "New Resource"  "GitHub Repository"
+3. Select: SHYAM-MAWAL/Lead_Scraper
+4. Set Environment Variable:
+   BROWSER_USE_API_KEY = bu_F7dGOTrCoqud9chjyjJSx7H2gCV1pzO8kMbxk2Obyw8
+5. Click "Deploy"
+6. Wait 2-5 minutes for build
+
+STEP 3: Test Your Deployment
+
+    curl https://your-domain.com/api/status
+
+    Expected: {"status":"ok","service":"Google Maps Lead Scraper"}
+
+ SECURITY NOTES:
+
+   .env file is excluded from Git (safe)
+   API key will NOT be pushed to GitHub
+   Set API key in Coolify environment variables
+   Mark as "Secret" in Coolify UI
+
+ PROJECT STRUCTURE:
+
+  GoogleMap_Lead/
+   app.py                 # Flask server
+   lead_scraper.py        # Scraping logic
+   static/
+      index.html         # Web interface
+      styles.css         # Styling
+      script.js          # Frontend logic
+   requirements.txt       # Python dependencies
+   Dockerfile             # Container build
+   docker-compose.yml     # Deployment config
+   .env                   # API key (NOT in Git)
+   DEPLOYMENT.md          # Full guide
+
+ ENDPOINTS:
+
+  GET  /                      Web interface
+  GET  /api/status            Health check
+  POST /api/leads             Scrape leads
+
+ FEATURES:
+
+   Real-time Google Maps scraping
+   Extract: Name, Address, Phone, Website
+   Optional email extraction (checkbox)
+   Export as CSV or JSON
+   RESTful API for integrations
+   Full CURL documentation
+
+ DOCUMENTATION:
+
+   DEPLOYMENT.md          - Complete deployment guide
+   CURL_API_DOCS.md       - API documentation
+   CURL_README.md         - CURL quick start
+   README.md              - Project overview
+
+ TECHNOLOGY STACK:
+
+   Backend:    Flask 3.1.2
+   Automation: browser-use-sdk 2.0.4
+   Frontend:   HTML5, CSS3, JavaScript
+   Container:  Docker
+   Platform:   Coolify (self-hosted)
+
+ NEXT ACTIONS:
+
+1. Run: .\deploy_github.ps1
+2. Import to Coolify from GitHub
+3. Set BROWSER_USE_API_KEY in Coolify
+4. Deploy and start scraping!
+
+ SUPPORT:
+
+  Repository: https://github.com/SHYAM-MAWAL/Lead_Scraper
+  Issues:     https://github.com/SHYAM-MAWAL/Lead_Scraper/issues
+
+

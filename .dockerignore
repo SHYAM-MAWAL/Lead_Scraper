@@ -1,0 +1,61 @@
+# Environment files
+.env
+.env.local
+.env.production
+*.env
+
+# Virtual environment
+env/
+venv/
+ENV/
+VENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+CURL_*.md
+*.txt
+!requirements.txt
+
+# Test files
+test_*.py
+*_test.py
+
+# Output files
+*.json
+*.csv
+!requirements.txt
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coolify
+.coolify/

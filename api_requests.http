@@ -1,0 +1,113 @@
+### Google Maps Lead Generator - HTTP Requests
+### Use this file with VS Code REST Client Extension or similar tools
+
+### Variables
+@baseUrl = http://localhost:5000
+@contentType = application/json
+
+###############################################
+# 1. Check API Status
+###############################################
+
+GET {{baseUrl}}/api/status
+
+###############################################
+# 2. Generate Leads - Quick Mode (No Email)
+###############################################
+
+POST {{baseUrl}}/api/leads
+Content-Type: {{contentType}}
+
+{
+  "query": "Coffee shops in London",
+  "num_leads": 5,
+  "email": "your@email.com",
+  "require_email": false
+}
+
+###############################################
+# 3. Generate Leads - Full Mode (With Email)
+###############################################
+
+POST {{baseUrl}}/api/leads
+Content-Type: {{contentType}}
+
+{
+  "query": "Dental clinic, Pune",
+  "num_leads": 5,
+  "email": "your@email.com",
+  "require_email": true
+}
+
+###############################################
+# 4. Example: Restaurants
+###############################################
+
+POST {{baseUrl}}/api/leads
+Content-Type: {{contentType}}
+
+{
+  "query": "Restaurants in Singapore",
+  "num_leads": 10,
+  "email": "your@email.com",
+  "require_email": false
+}
+
+###############################################
+# 5. Example: Hotels with Email
+###############################################
+
+POST {{baseUrl}}/api/leads
+Content-Type: {{contentType}}
+
+{
+  "query": "Hotels in Dubai",
+  "num_leads": 15,
+  "email": "your@email.com",
+  "require_email": true
+}
+
+###############################################
+# 6. Example: Small Test (3 leads)
+###############################################
+
+POST {{baseUrl}}/api/leads
+Content-Type: {{contentType}}
+
+{
+  "query": "Gyms in Los Angeles",
+  "num_leads": 3,
+  "email": "test@example.com",
+  "require_email": false
+}
+
+###############################################
+# 7. Example: Maximum Leads
+###############################################
+
+POST {{baseUrl}}/api/leads
+Content-Type: {{contentType}}
+
+{
+  "query": "Bakeries in Paris",
+  "num_leads": 100,
+  "email": "your@email.com",
+  "require_email": false
+}
+
+###############################################
+# CURL Equivalents (for reference)
+###############################################
+
+# Linux/Mac:
+# curl -X POST http://localhost:5000/api/leads \
+#   -H "Content-Type: application/json" \
+#   -d '{"query": "Coffee shops", "num_leads": 5, "email": "test@example.com", "require_email": false}'
+
+# Windows CMD:
+# curl -X POST http://localhost:5000/api/leads ^
+#   -H "Content-Type: application/json" ^
+#   -d "{\"query\": \"Coffee shops\", \"num_leads\": 5, \"email\": \"test@example.com\", \"require_email\": false}"
+
+# PowerShell:
+# Invoke-RestMethod -Uri "http://localhost:5000/api/leads" -Method POST -ContentType "application/json" -Body '{"query": "Coffee shops", "num_leads": 5, "email": "test@example.com", "require_email": false}'
