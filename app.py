@@ -57,7 +57,8 @@ def get_leads():
 
 @app.route('/api/status', methods=['GET'])
 def status():
-    return jsonify({'status': 'running', 'version': '1.0.0'})
+    return jsonify({'status': 'ok', 'service': 'Google Maps Lead Scraper'})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
