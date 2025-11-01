@@ -34,9 +34,13 @@ def get_leads():
     try:
         data = request.json
         query = data.get('query', '')
-        num_leads = data.get('num_leads', 20)
+        num_leads = int(data.get('num_leads', 20))  # Convert to integer
         email = data.get('email', '')
+        
+        # Handle require_email as boolean (can come as string from n8n)
         require_email = data.get('require_email', False)
+        if isinstance(require_email, str):
+            require_email = require_email.lower() in ('true', '1', 'yes')
         
         if not query:
             return jsonify({'error': 'Query is required'}), 400
@@ -44,6 +48,9 @@ def get_leads():
         if not email:
             return jsonify({'error': 'Email is required'}), 400
         
+        # Ensure num_leads is within valid range
+        if num_leads < 1:
+            num_leads = 1
         if num_leads > 100:
             num_leads = 100
         

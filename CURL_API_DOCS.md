@@ -51,7 +51,7 @@ curl -X POST http://localhost:5000/api/leads \
 ```cmd
 curl -X POST http://localhost:5000/api/leads ^
   -H "Content-Type: application/json" ^
-  -d "{\"query\": \"Dental clinic, Pune\", \"num_leads\": 5, \"email\": \"your@email.com\", \"require_email\": false}"
+  -d "{\"query\": \"Dental clinic, Pune\", \"num_leads\": 1, \"email\": \"your@email.com\", \"require_email\": false}"
 ```
 
 **PowerShell:**
@@ -300,26 +300,63 @@ with urllib.request.urlopen(request) as response:
 
 **Method:** POST
 
-**URL:** `http://localhost:5000/api/leads`
+**URL:** `http://hgck40g4go4c800kk08wow00.185.245.182.223.sslip.io/api/leads`
 
 **Authentication:** None
 
-**Headers:**
+**Send Body:** Yes
+
+**Body Content Type:** JSON
+
+**Specify Body:** Using JSON
+
+**JSON Parameters:**
+
+| Name | Value | Type |
+|------|-------|------|
+| `query` | `{{ $json.query }}` or `"Dental clinic, Pune"` | String |
+| `num_leads` | `{{ $json.num_leads }}` or `5` | **Number** (NOT String) |
+| `email` | `{{ $json.email }}` or `"your@email.com"` | String |
+| `require_email` | `{{ $json.require_email }}` or `false` | Boolean |
+
+**⚠️ IMPORTANT for n8n:**
+- `num_leads` must be a **NUMBER**, not a string
+- `require_email` must be a **BOOLEAN** (true/false), not a string
+- Don't wrap numbers in quotes in n8n JSON
+
+**Example JSON Body:**
 ```json
 {
-  "Content-Type": "application/json"
+  "query": "Dental clinic, Pune",
+  "num_leads": 5,
+  "email": "shyammawalweb@gmail.com",
+  "require_email": false
 }
 ```
 
-**Body (JSON):**
-```json
-{
-  "query": "{{ $json.searchQuery }}",
-  "num_leads": {{ $json.numberOfLeads }},
-  "email": "{{ $json.userEmail }}",
-  "require_email": {{ $json.extractEmails }}
-}
+**Alternative: Using Fields**
+
+If using "Fields to Send" option in n8n:
+- Set "Body Content Type" to "JSON"
+- Add fields:
+  - query (String): "Dental clinic, Pune"
+  - num_leads (Number): 5
+  - email (String): "shyammawalweb@gmail.com"
+  - require_email (Boolean): false
+
+**Importing CURL in n8n:**
+
+When importing this CURL command:
+```bash
+curl -X POST http://hgck40g4go4c800kk08wow00.185.245.182.223.sslip.io/api/leads \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Dental clinic, Pune", "num_leads": 1, "email": "shyammawalweb@gmail.com", "require_email": false}'
 ```
+
+After import:
+1. Check the JSON body in n8n
+2. Ensure `num_leads` is a number (no quotes)
+3. Ensure `require_email` is boolean (no quotes)
 
 ---
 
