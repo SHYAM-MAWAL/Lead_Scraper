@@ -57,7 +57,10 @@ For each business:
 - Common email patterns: info@, contact@, hello@, support@, [businessname]@
 - If no email is found on the website, use empty string ""
 
-Return ONLY a JSON object in this exact format:
+Return ONLY a valid JSON object. Do not include any explanatory text before or after the JSON.
+The response must start with {{ and end with }}.
+
+Format:
 {{
     "leads": [
         {{
@@ -70,7 +73,7 @@ Return ONLY a JSON object in this exact format:
     ]
 }}
 
-Make sure to return valid JSON. Do not include any other text or explanation.
+IMPORTANT: Return ONLY the JSON object above, nothing else. No introduction, no conclusion, just the JSON.
 """
         else:
             task_description = f"""
@@ -87,7 +90,10 @@ For each business:
 - Look for the phone number, website, and address in the business details panel
 - If information is not available, use empty string ""
 
-Return ONLY a JSON object in this exact format:
+Return ONLY a valid JSON object. Do not include any explanatory text before or after the JSON.
+The response must start with {{ and end with }}.
+
+Format:
 {{
     "leads": [
         {{
@@ -100,7 +106,7 @@ Return ONLY a JSON object in this exact format:
     ]
 }}
 
-Make sure to return valid JSON. Do not include any other text or explanation.
+IMPORTANT: Return ONLY the JSON object above, nothing else. No introduction, no conclusion, just the JSON.
 """
         
         print(f"🔍 Creating task for query: {query}")
@@ -135,27 +141,48 @@ Make sure to return valid JSON. Do not include any other text or explanation.
             # Parse the output
             if hasattr(result, 'output') and result.output:
                 print(f"📝 Raw output type: {type(result.output)}")
-                print(f"📝 Raw output preview: {str(result.output)[:200]}...")
+                print(f"📝 Raw output: {str(result.output)}")
                 
                 # Try to parse the output
                 if isinstance(result.output, str):
-                    # Try to parse as JSON
-                    try:
-                        output_data = json.loads(result.output)
-                        if isinstance(output_data, dict) and 'leads' in output_data:
-                            leads = output_data['leads']
-                        elif isinstance(output_data, list):
-                            leads = output_data
-                        else:
+                    # Try to find JSON in the output (might be wrapped in text)
+                    import re
+                    
+                    # Look for JSON object in the output
+                    json_match = re.search(r'\{[\s\S]*"leads"[\s\S]*\}', result.output)
+                    if json_match:
+                        try:
+                            output_data = json.loads(json_match.group(0))
+                            if isinstance(output_data, dict) and 'leads' in output_data:
+                                leads = output_data['leads']
+                                print(f"✅ Extracted {len(leads)} leads from JSON")
+                            else:
+                                print(f"⚠️  JSON found but no 'leads' key")
+                                leads = []
+                        except json.JSONDecodeError as e:
+                            print(f"⚠️  JSON parsing error: {e}")
+                            print(f"⚠️  Matched text: {json_match.group(0)[:200]}...")
                             leads = []
-                    except json.JSONDecodeError:
-                        print("⚠️  Could not parse output as JSON")
-                        leads = []
+                    else:
+                        # Try direct JSON parse
+                        try:
+                            output_data = json.loads(result.output)
+                            if isinstance(output_data, dict) and 'leads' in output_data:
+                                leads = output_data['leads']
+                            elif isinstance(output_data, list):
+                                leads = output_data
+                            else:
+                                leads = []
+                        except json.JSONDecodeError:
+                            print(f"⚠️  Could not parse output as JSON")
+                            print(f"⚠️  Output was: {result.output[:500]}")
+                            leads = []
                 elif isinstance(result.output, dict) and 'leads' in result.output:
                     leads = result.output['leads']
                 elif isinstance(result.output, list):
                     leads = result.output
                 else:
+                    print(f"⚠️  Unexpected output type: {type(result.output)}")
                     leads = []
             else:
                 print("⚠️  No output received from task")
