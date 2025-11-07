@@ -35,7 +35,7 @@ STEP 2: Deploy to Coolify
 2. Click "New Resource"  "GitHub Repository"
 3. Select: SHYAM-MAWAL/Lead_Scraper
 4. Set Environment Variable:
-   BROWSER_USE_API_KEY = bu_F7dGOTrCoqud9chjyjJSx7H2gCV1pzO8kMbxk2Obyw8
+   BROWSER_USE_API_KEY = bu_F7dGOTrCoqud9XXX
 5. Click "Deploy"
 6. Wait 2-5 minutes for build
 
